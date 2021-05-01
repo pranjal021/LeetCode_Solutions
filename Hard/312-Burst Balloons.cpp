@@ -1,29 +1,31 @@
 class Solution {
 public:
     int maxCoins(vector<int>& nums) {
-        if(nums.size()==0)
-            return 0;
-        vector<int> v(nums.size()+2,1);
-        for(int i=0;i<nums.size();i++)
-        {
-            v[i+1]=nums[i];
+        
+        int n = nums.size();
+        int dp[n][n];
+        memset(dp, 0, sizeof dp);
+        
+        for(int g=0;g<n;g++){
+            for(int i=0,j=g;j<n;i++,j++){
+                
+                int m = INT_MIN;
+                for(int k=i;k<=j;k++){
+                    int left = k == i ? 0 : dp[i][k-1];
+                    int right = k == j ? 0 : dp[k+1][j];
+                    int val = (i==0 ? 1 : nums[i-1]) * nums[k] * (j == n-1 ? 1 : nums[j+1]);
+                    
+                    int t = left + right + val;
+                    if(t > m){
+                        m = t;
+                    }
+                    
+                }
+                
+                dp[i][j] = m; 
+            }
         }
-        vector<vector<int>> dp(v.size(),vector<int> (v.size(),-1));
-        return helper(v,1,v.size()-1,dp);
-    }
-    
-    int helper(vector<int> &v, int i, int j,vector<vector<int>> &dp)
-    {
-        if(i>=j)
-            return 0;
-        if(dp[i][j]>=0)
-            return dp[i][j];
-        int cost=INT_MIN;
-        for(int k=i;k<=j-1;k++)
-        {
-            cost=max(cost, helper(v,i,k,dp)+helper(v,k+1,j,dp)+ v[i-1]*v[k]*v[j]);
-        }
-        dp[i][j]=cost;
-        return cost;
+        
+        return dp[0][n-1];
     }
 };
