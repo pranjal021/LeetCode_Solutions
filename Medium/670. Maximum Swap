@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int maximumSwap(int num) {
+        string str = to_string(num);
+        
+        int maxDigit = -1, maxIndex = -1;
+        int leftIndex = -1, rightIndex = -1;
+        
+        for(int i=str.size()-1;i>=0;i--){
+            
+            if(str[i] > maxDigit){
+                maxDigit = str[i];
+                maxIndex = i;
+                continue;
+            }
+            
+            if(str[i] < maxDigit){
+                leftIndex = i;
+                rightIndex = maxIndex;
+            }            
+        }
+        
+        if(leftIndex == -1) return num;
+        
+        swap(str[leftIndex], str[rightIndex]);
+        
+        num = stoi(str);
+        
+        return num;
+    }
+};
